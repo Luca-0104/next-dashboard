@@ -18,6 +18,13 @@ const UpdateInvoice = FormSchema.omit({ id: true, date: true });
 
 const invoicesPath = '/dashboard/invoices';
 
+export async function deleteInvoice(id: string) {
+  await sql`
+    DELETE FROM invoices WHERE id = ${id}
+  `;
+  revalidatePath(invoicesPath);
+}
+
 export async function updateInvoice(id: string, formData: FormData) {
   const rawFormData = {
     customerId: formData.get('customerId'),
@@ -31,7 +38,7 @@ export async function updateInvoice(id: string, formData: FormData) {
     UPDATE invoices
     SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
     WHERE id = ${id}
-  `
+  `;
 
   revalidatePath(invoicesPath);
   redirect(invoicesPath)
@@ -53,7 +60,7 @@ export async function createInvoice(formData: FormData) {
   await sql`
     INSERT INTO invoices (customer_id, amount, status, date)
     VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
-  `
+  `;
   
   revalidatePath('/dashboard/invoices');
   redirect('/dashboard/invoices');
