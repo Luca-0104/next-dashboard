@@ -19,6 +19,8 @@ const UpdateInvoice = FormSchema.omit({ id: true, date: true });
 const invoicesPath = '/dashboard/invoices';
 
 export async function deleteInvoice(id: string) {
+  throw new Error("Failed to Delete Invoice");
+  
   try {
     await sql`
       DELETE FROM invoices WHERE id = ${id}
